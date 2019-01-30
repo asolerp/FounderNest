@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const CriteriaSchema = new Schema({
-  criteria: "Growing traction"
-  explanation: "Visit-to-sales ratio of 10% with 10% monthly growth"
-  importance: 100
-  label: "Nice To Have"
-  labelImportance: 3
-  value: "YES"
+  criteria: String,
+  explanation: String,
+  importance: Number,
+  label: {type: String, enum: ['Must Have','Super Nice To Have','Nice To Have'] },
+  labelImportance: Number,
+  value: {type: String, enum: ['YES','NO','NA'] },
 });
 
 const Criteria = mongoose.model("Criteria", CriteriaSchema);
+
 module.exports = Criteria;
