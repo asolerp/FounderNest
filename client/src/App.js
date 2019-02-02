@@ -13,7 +13,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.post('http://localhost:5000/allCompanies', {id: '5c52c6c18484d15d225da0d3'}).then(response => console.log(response.data))
+    axios.post('http://localhost:5000/', {id: '5c52c6c18484d15d225da0d3'}).then(response => console.log(response.data))
   }
 
   render() {

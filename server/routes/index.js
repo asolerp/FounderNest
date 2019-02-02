@@ -4,12 +4,17 @@ const Investor = require("../models/Investor");
 const Company = require("../models/Company");
 const Criteria = require("../models/Criteria");
 
+const messages = [
+  "Action make!",
+  "Criteria updated!"
+]
+
 
 /*
  * GET / all companies of a specific investor.
  */
 
-getInvestorCompanies = (req, res) => {
+getInvestorCompanies = (req, res, message) => {
   Investor.find({ _id: req.body.idInvestor })
     // Populate to get comapnies info
     .populate({
@@ -18,7 +23,7 @@ getInvestorCompanies = (req, res) => {
       populate: { path: "criterias" }
     })
     .then(investor => {
-      res.status(200).json(investor[0].companies)
+      res.status(200).json({message: message , companies:  investor[0].companies})
     })
     .catch(err => {
       res.status(500).json({message: "Investor does not found"})
@@ -36,11 +41,11 @@ postActionToCompany = (req, res) => {
     { $set: { callToAction: req.body.action } },
     { new: true }
   )
-    .then(() => {
-      getInvestorCompanies(req, res);
+    .then(result => {
+      result !== null ?  getInvestorCompanies(req, res, messages[0]) : res.status(500).json({message: "Company inexistent"});
     })
     .catch(err => {
-      res.status(500).json({ message: err });
+      res.status(500).json({message: "Error trying to make an action"});
     });
 };
 
@@ -57,7 +62,7 @@ postCriterias = (req, res) => {
       { new: true }
     )
       .then(() => {
-        getInvestorCompanies(req, res);
+        getInvestorCompanies(req, res, messages[1]);
       })
       .catch(err => {
         res.status(500).json({ message: err });
