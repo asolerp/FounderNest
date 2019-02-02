@@ -4,6 +4,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require('cors');
 const bodyParser   = require('body-parser');
+const config = require('config');
+const routes = require('./routes/index')
+const morgan = require('morgan');
 
 mongoose
   .connect(
@@ -20,7 +23,6 @@ mongoose
   });
 
 const app_name = require("./package.json").name;
-
 const app = express();
 
 app.use(cors({
@@ -28,6 +30,12 @@ app.use(cors({
   origin: ['http://localhost:3001']
 }));
 
+
+//don't show the log when it is test
+if(config.util.getEnv('NODE_ENV') !== 'test') {
+  //use morgan to log at command line
+  app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
+}
 
 // Middleware Setup
 app.use(bodyParser.json());
@@ -39,6 +47,12 @@ app.locals.title = "FounderNest";
 
 const index = require("./routes/index");
 
-app.use("/", index);
+// app.use("/", index);
+
+app.route("/")
+  .get(routes.getInvestorCompanies)
+
+app.route("/postAction")
+  .post(routes.postActionToCompany)
 
 module.exports = app;

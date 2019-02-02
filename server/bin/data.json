@@ -1,0 +1,27 @@
+[
+    {
+        "_id": "5c532101abaf4620a8616fea",
+        "criteria": "Stage is Seed or Series A",
+        "explanation": "Seed",
+        "importance": 100,
+        "label": "Must Have",
+        "labelImportance": 1,
+        "value": "YES",
+        "__v": 0
+    },
+    {
+        "_id": "5c532101abaf4620a8616feb",
+        "criteria": "Founding team has experience in the industry",
+        "explanation": "",
+        "importance": 30,
+        "label": "Super Nice To Have",
+        "labelImportance": 2,
+        "value": "NA",
+        "__v": 0
+    }
+]
+
+{
+    "_id":"5c532101abaf4620a8616fe9",
+    "action": "FU"
+}

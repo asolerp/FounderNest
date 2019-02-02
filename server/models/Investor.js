@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const InvestorSchema = new Schema(
   {
-    id: String,
-    firstName: String,
-    lastName: String,
-    emailAddress: String,
-    pictureUrl: String,
-    phoneNumber: String,
+    id: {type: String, required: true},
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
+    emailAddress: {type: String, required: true},
+    pictureUrl: {type: String, required: true},
+    phoneNumber: {type: String, required: true},
     companies: [{ type: Schema.Types.ObjectId, ref: "Company",  default: [""] }],
   },
   {
