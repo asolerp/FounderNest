@@ -10,7 +10,7 @@ const morgan = require('morgan');
 
 mongoose
   .connect(
-    process.env.DB,
+     config.DBHost,
     { useNewUrlParser: true }
   )
   .then(x => {
@@ -54,5 +54,8 @@ app.route("/")
 
 app.route("/postAction")
   .post(routes.postActionToCompany)
+
+  app.route("/postCriterias")
+  .post(routes.postCriterias)
 
 module.exports = app;

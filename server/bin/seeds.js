@@ -30,7 +30,6 @@ let newInvestor = {
 };
 
 let newCompany = {
-  callToAction: "PI",
   href: "StartupZubat",
   html: "FN_StartupZubat.html",
   id: "StartupZubat",
@@ -57,7 +56,6 @@ let newCriteria = [
   },
   {
     criteria: "Founding team has experience in the industry",
-    explanation: "",
     importance: 30,
     label: "Super Nice To Have",
     labelImportance: 2,

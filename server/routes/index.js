@@ -4,11 +4,12 @@ const Investor = require("../models/Investor");
 const Company = require("../models/Company");
 const Criteria = require("../models/Criteria");
 
+
 /*
  * GET / all companies of a specific investor.
  */
 
-getInvestorCompanies = (req, res, data) => {
+getInvestorCompanies = (req, res) => {
   Investor.find({ _id: req.body.idInvestor })
     // Populate to get comapnies info
     .populate({
@@ -16,9 +17,14 @@ getInvestorCompanies = (req, res, data) => {
       // Deep populate to get criterias of each company
       populate: { path: "criterias" }
     })
-    .then(investor => res.status(200).json(investor[0].companies))
-    .catch(err => res.status(500).json({ message: err }));
+    .then(investor => {
+      res.status(200).json(investor[0].companies)
+    })
+    .catch(err => {
+      res.status(500).json({message: "Investor does not found"})
+    });
 };
+
 
 /*
  * POST /action to a company.
@@ -38,11 +44,12 @@ postActionToCompany = (req, res) => {
     });
 };
 
+
 /*
  * POST / update criterias of a company.
  */
 
-postCriterias = (req, res) =>
+postCriterias = (req, res) => {
   req.body.criterias.map(criteria => {
     Criteria.findOneAndUpdate(
       { _id: criteria._id },
@@ -54,8 +61,9 @@ postCriterias = (req, res) =>
       })
       .catch(err => {
         res.status(500).json({ message: err });
-      });
-  });
+      })
+  })
+}
 
 //export all the functions
 module.exports = {

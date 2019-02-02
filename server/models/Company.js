@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const CompanySchema = new Schema({
   
-  callToAction: { type: String, default: [""] },
+  callToAction: { type: String, enum: ["","PI", "BR", "LI", "FR", "RU", "RO", "DI"], default: [""] },
   href: {type: String, required: true},
   html: {type: String, required: true},
   id: {type: String, required: true},
