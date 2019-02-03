@@ -27,14 +27,14 @@ const app = express();
 
 app.use(cors({
   credentials: true,
-  origin: ['http://localhost:3001']
+  origin: ['http://localhost:3000']
 }));
 
 
 //don't show the log when it is test
 if(config.util.getEnv('NODE_ENV') !== 'test') {
   //use morgan to log at command line
-  app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
+  app.use(morgan('combined')); 
 }
 
 // Middleware Setup
@@ -50,7 +50,7 @@ const index = require("./routes/index");
 // app.use("/", index);
 
 app.route("/")
-  .get(routes.getInvestorCompanies)
+  .post(routes.getInvestorCompanies)
 
 app.route("/postAction")
   .post(routes.postActionToCompany)

@@ -1,11 +1,8 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = "test";
 
-const mongoose = require("mongoose");
-
-const Investor = require("../models/Investor");
 const Company = require("../models/Company");
-const Criteria = require("../models/Criteria");
+
 
 //Require the dev-dependencies
 const chai = require("chai");
@@ -25,25 +22,12 @@ describe("Investor", () => {
    * Test the /GET route
    */
 
-  describe("/GET companies of an specific investor", () => {
-    it("it should GET all the companies", done => {
-      chai
-        .request(server)
-        .get("/")
-        .send({ idInvestor: "5c55c8e2dc7db4627ee158fe" })
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          done();
-        });
-    });
-  });
+  describe("/POST companies of an specific investor", () => {
 
-  describe("/GET companies of an specific investor", () => {
-    it("it should GET a error message if not investor was found", done => {
+    it("it should POST a error message if not investor was found", done => {
       chai
         .request(server)
-        .get("/")
+        .post("/")
         .send({ idInvestor: "5c55c8e2dc7db47ee158fe" })
         .end((err, res) => {
           res.should.have.status(500);
@@ -53,13 +37,28 @@ describe("Investor", () => {
           done();
         });
     });
+
+    it("it should POST all the companies", done => {
+      chai
+        .request(server)
+        .post("/")
+        .send({ idInvestor: "5c55c8e2dc7db4627ee158fe" })
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
   });
+
 
   /*
    * Test the /POST routes
    */
 
-  describe("/POST ", () => {
+  // Testing action of a company
+
+  describe("/POST actions ", () => {
     it("it should get an erro message if POST with uncomplete info", done => {
       const companyAction = {
         idInvestor: "5c55c2dc7db4627ee158fe",
@@ -78,6 +77,7 @@ describe("Investor", () => {
           done();
         });
     });
+
     it("it should POST an action ", done => {
       const companyAction = {
         idInvestor: "5c55c8e2dc7db4627ee158fe",
@@ -88,20 +88,106 @@ describe("Investor", () => {
         { _id: companyAction.idCompany },
         { $set: { callToAction: companyAction.action } },
         { new: true }
-      ).then(() => {
-        chai
-          .request(server)
-          .post("/postAction")
-          .send(companyAction)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.be.a("object");
-            res.body.should.have.property("message").eql("Action make!");
-            res.body.should.have.property("companies");
-            res.body.companies[0].callToAction.should.eql(companyAction.action);
-            done();
-          });
-      });
+      )
+        .then(() => {
+          chai
+            .request(server)
+            .post("/postAction")
+            .send(companyAction)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a("object");
+              res.body.should.have.property("message").eql("Action make!");
+              res.body.should.have.property("companies");
+              res.body.companies[0].callToAction.should.eql(
+                companyAction.action
+              );
+              done();
+            });
+        })
+        .catch(err => console.log(err));
     });
   });
+});
+
+describe("/POST criterias", () => {
+
+  it("it should POST a error message if a criteria cannot be updated", done => {
+    const updateCriteria = {
+      idInvestor:"5c55c8e2dc7db4627ee158fe",
+      criterias: [
+        {
+          _id: "5c55c8e2dcb4627ee15900",
+          criteria: "Stage is Seed or Series A",
+          explanation: "Seed",
+          importance: 100,
+          label: "Must Have",
+          labelImportance: 1,
+          value: "NO"
+        },
+        {
+          _id: "5c55c8e2dc7db4627ee901",
+          criteria: "Founding team has experience in the industry",
+          explanation: "",
+          importance: 30,
+          label: "Super Nice To Have",
+          labelImportance: 2,
+          value: "NO"
+        }
+      ]
+    };
+    chai
+      .request(server)
+      .post("/postCriterias")
+      .send(updateCriteria)
+      .end((err, res) => {
+        res.should.have.status(500);
+        res.body.should.have
+        .property("message")
+        .eql("Error trying to update criterias");
+        done();
+      });
+  });
+
+  it("it should POST a criteria update ", done => {
+
+    const updateCriteria = {
+      idInvestor:"5c55c8e2dc7db4627ee158fe",
+      criterias: [
+        {
+          _id: "5c55c8e2dc7db4627ee15900",
+          criteria: "Stage is Seed or Series A",
+          explanation: "Seed",
+          importance: 100,
+          label: "Must Have",
+          labelImportance: 1,
+          value: "NA"
+        },
+        {
+          _id: "5c55c8e2dc7db4627ee15901",
+          criteria: "Founding team has experience in the industry",
+          explanation: "",
+          importance: 30,
+          label: "Super Nice To Have",
+          labelImportance: 2,
+          value: "NO"
+        }
+      ]
+    };
+    chai
+      .request(server)
+      .post("/postCriterias")
+      .send(updateCriteria)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.should.have.property("message").eql("Criteria updated!");
+        res.body.should.have.property("companies");
+        res.body.companies[0].criterias[0].value.should.eql(
+          updateCriteria.criterias[0].value
+        );
+        done();
+      });
+  });
+
 });

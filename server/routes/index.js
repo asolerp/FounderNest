@@ -1,14 +1,11 @@
 const mongoose = require("mongoose");
+mongoose.Promise = require('bluebird'); 
 
 const Investor = require("../models/Investor");
 const Company = require("../models/Company");
 const Criteria = require("../models/Criteria");
 
-const messages = [
-  "Action make!",
-  "Criteria updated!"
-]
-
+const messages = ["Action make!", "Criteria updated!"];
 
 /*
  * GET / all companies of a specific investor.
@@ -23,13 +20,13 @@ getInvestorCompanies = (req, res, message) => {
       populate: { path: "criterias" }
     })
     .then(investor => {
-      res.status(200).json({message: message , companies:  investor[0].companies})
+      res.status(200)
+        .json({ message: message, companies: investor[0].companies });
     })
     .catch(err => {
-      res.status(500).json({message: "Investor does not found"})
+      res.status(500).json({ message: "Investor does not found" });
     });
 };
-
 
 /*
  * POST /action to a company.
@@ -42,33 +39,39 @@ postActionToCompany = (req, res) => {
     { new: true }
   )
     .then(result => {
-      result !== null ?  getInvestorCompanies(req, res, messages[0]) : res.status(500).json({message: "Company inexistent"});
+      result !== null
+        ? getInvestorCompanies(req, res, messages[0])
+        : res.status(500).json({ message: "Company inexistent" });
     })
     .catch(err => {
-      res.status(500).json({message: "Error trying to make an action"});
+      res.status(500).json({ message: "Error trying to make an action" });
     });
 };
-
 
 /*
  * POST / update criterias of a company.
  */
 
 postCriterias = (req, res) => {
-  req.body.criterias.map(criteria => {
-    Criteria.findOneAndUpdate(
+
+  let promises = req.body.criterias.map(criteria => {
+    return Criteria.findOneAndUpdate(
       { _id: criteria._id },
       { $set: { value: criteria.value } },
       { new: true }
     )
-      .then(() => {
-        getInvestorCompanies(req, res, messages[1]);
-      })
-      .catch(err => {
-        res.status(500).json({ message: err });
-      })
+  });
+
+  Promise.all(promises)
+  .then(result => {
+    result !== null
+      ? getInvestorCompanies(req, res, messages[1])
+      : res.status(500).json({ message: "This criteria does not exist" });
   })
-}
+  .catch(err => {
+    res.status(500).json({ message: "Error trying to update criterias" });
+  });
+};
 
 //export all the functions
 module.exports = {
