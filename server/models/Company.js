@@ -12,9 +12,9 @@ const CompanySchema = new Schema({
   mustHaveScorePositions: {type: Number, required: true},
   na: {type: Number, required: true},
   name: {type: String, required: true},
-  netScore: {type: Number, required: true},
+  netScore: {type: String, required: true},
   netScorePositions: {type: Number, required: true},
-  mustHaveScore: {type: Number, required: true},
+  mustHaveScore: {type: String, required: true},
   niceToHaveScore: {type: Number, required: true},
   superNiceToHaveScore: {type: Number, required: true}
 

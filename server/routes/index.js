@@ -61,29 +61,29 @@ postCriterias = (req, res) => {
 
   console.log(countOfMustHave/req.body.criterias.length)
 
-  // let promiseCompany = Company.findByIdAndUpdate(
-  //   {_id: req.body.idCompany},
-  //   { $set: { mustHaveScore: (countOfMustHave/req.body.criterias.length), superNiceToHaveScore:  (countOfSuperNiceToHave/req.body.criterias.length),niceToHaveScore:   (countOfNiceToHave/req.body.criterias.length)   } },
-  //   { new: true }
-  // )
+  let promiseCompany = Company.findByIdAndUpdate(
+    {_id: req.body.idCompany},
+    { $set: { mustHaveScore: (countOfMustHave/req.body.criterias.length), superNiceToHaveScore:  (countOfSuperNiceToHave/req.body.criterias.length),niceToHaveScore:   (countOfNiceToHave/req.body.criterias.length)   } },
+    { new: true }
+  )
 
-  // let promisesCriteria = req.body.criterias.map(criteria => {
-  //   return Criteria.findOneAndUpdate(
-  //     { _id: criteria._id },
-  //     { $set: { value: criteria.value } },
-  //     { new: true }
-  //   )
-  // });
+  let promisesCriteria = req.body.criterias.map(criteria => {
+    return Criteria.findOneAndUpdate(
+      { _id: criteria._id },
+      { $set: { value: criteria.value } },
+      { new: true }
+    )
+  });
 
-  // Promise.all([promiseCompany, promisesCriteria])
-  // .then(result => {
-  //   result !== null
-  //     ? getInvestorCompanies(req, res, messages[1])
-  //     : res.status(500).json({ message: "This criteria does not exist" });
-  // })
-  // .catch(err => {
-  //   res.status(500).json({ message: "Error trying to update criterias" });
-  // });
+  Promise.all([promiseCompany, promisesCriteria])
+  .then(result => {
+    result !== null
+      ? getInvestorCompanies(req, res, messages[1])
+      : res.status(500).json({ message: "This criteria does not exist" });
+  })
+  .catch(err => {
+    res.status(500).json({ message: "Error trying to update criterias" });
+  });
 };
 
 //export all the functions

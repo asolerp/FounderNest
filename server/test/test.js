@@ -42,7 +42,8 @@ describe("Investor", () => {
       chai
         .request(server)
         .post("/")
-        .send({ idInvestor: "5c55c8e2dc7db4627ee158fe" })
+        // use a correct ID from the DB
+        .send({ idInvestor: "5c58ba7dcf6f760ff1733ab2" })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
@@ -79,9 +80,10 @@ describe("Investor", () => {
     });
 
     it("it should POST an action ", done => {
+      // correct investor ID and company ID from db
       const companyAction = {
-        idInvestor: "5c55c8e2dc7db4627ee158fe",
-        idCompany: "5c55c8e2dc7db4627ee158ff",
+        idInvestor: "5c58ba7dcf6f760ff1733ab2",
+        idCompany: "5c58ba7dcf6f760ff1733ab3",
         action: "DE"
       };
       Company.findOneAndUpdate(
@@ -152,10 +154,10 @@ describe("/POST criterias", () => {
   it("it should POST a criteria update ", done => {
 
     const updateCriteria = {
-      idInvestor:"5c55c8e2dc7db4627ee158fe",
+      idInvestor:"5c58ba7dcf6f760ff1733ab2",
       criterias: [
         {
-          _id: "5c55c8e2dc7db4627ee15900",
+          _id: "5c58ba7dcf6f760ff1733ab4",
           criteria: "Stage is Seed or Series A",
           explanation: "Seed",
           importance: 100,
@@ -164,7 +166,7 @@ describe("/POST criterias", () => {
           value: "NA"
         },
         {
-          _id: "5c55c8e2dc7db4627ee15901",
+          _id: "5c58ba7dcf6f760ff1733ab5",
           criteria: "Founding team has experience in the industry",
           explanation: "",
           importance: 30,
