@@ -4,6 +4,7 @@ mongoose.Promise = require('bluebird');
 const Investor = require("../models/Investor");
 const Company = require("../models/Company");
 const Criteria = require("../models/Criteria");
+const mathScore = require('../utils/mathScore')
 
 const messages = ["Action make!", "Criteria updated!"];
 
@@ -54,23 +55,35 @@ postActionToCompany = (req, res) => {
 
 postCriterias = (req, res) => {
 
-  let promises = req.body.criterias.map(criteria => {
-    return Criteria.findOneAndUpdate(
-      { _id: criteria._id },
-      { $set: { value: criteria.value } },
-      { new: true }
-    )
-  });
+  let countOfMustHave = mathScore.calculateTotalLabels("Must Have", req.body.criterias)
+  let countOfSuperNiceToHave = mathScore.calculateTotalLabels("Super Nice To Have", req.body.criterias)
+  let countOfNiceToHave = mathScore.calculateTotalLabels("Nice To Have", req.body.criterias)
 
-  Promise.all(promises)
-  .then(result => {
-    result !== null
-      ? getInvestorCompanies(req, res, messages[1])
-      : res.status(500).json({ message: "This criteria does not exist" });
-  })
-  .catch(err => {
-    res.status(500).json({ message: "Error trying to update criterias" });
-  });
+  console.log(countOfMustHave/req.body.criterias.length)
+
+  // let promiseCompany = Company.findByIdAndUpdate(
+  //   {_id: req.body.idCompany},
+  //   { $set: { mustHaveScore: (countOfMustHave/req.body.criterias.length), superNiceToHaveScore:  (countOfSuperNiceToHave/req.body.criterias.length),niceToHaveScore:   (countOfNiceToHave/req.body.criterias.length)   } },
+  //   { new: true }
+  // )
+
+  // let promisesCriteria = req.body.criterias.map(criteria => {
+  //   return Criteria.findOneAndUpdate(
+  //     { _id: criteria._id },
+  //     { $set: { value: criteria.value } },
+  //     { new: true }
+  //   )
+  // });
+
+  // Promise.all([promiseCompany, promisesCriteria])
+  // .then(result => {
+  //   result !== null
+  //     ? getInvestorCompanies(req, res, messages[1])
+  //     : res.status(500).json({ message: "This criteria does not exist" });
+  // })
+  // .catch(err => {
+  //   res.status(500).json({ message: "Error trying to update criterias" });
+  // });
 };
 
 //export all the functions
