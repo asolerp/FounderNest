@@ -52,6 +52,12 @@ const index = require("./routes/index");
 app.route("/")
   .post(routes.getInvestorCompanies)
 
+  app.route("/summary")
+  .post(routes.getInvestorCompanies)
+
+  // app.route("/criterias")
+  // .post("Page for move criterias")
+
 app.route("/postAction")
   .post(routes.postActionToCompany)
 

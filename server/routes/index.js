@@ -59,7 +59,6 @@ postCriterias = (req, res) => {
   let countOfSuperNiceToHave = mathScore.calculateTotalLabels("Super Nice To Have", req.body.criterias)
   let countOfNiceToHave = mathScore.calculateTotalLabels("Nice To Have", req.body.criterias)
 
-  console.log(countOfMustHave/req.body.criterias.length)
 
   let promiseCompany = Company.findByIdAndUpdate(
     {_id: req.body.idCompany},
